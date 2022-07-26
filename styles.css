@@ -48,6 +48,9 @@
   border-radius: 15px;
   font-size: 1.2rem;
 }
+.btn:active {
+  transform: matrix(0.95, 0, 0, 0.95, 0, 0);
+}
 .special {
   color: #f60;
 }
