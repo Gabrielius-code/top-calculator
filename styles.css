@@ -27,7 +27,7 @@
   font-size: 2.5rem;
   grid-column: 1/5;
   grid-row: 2/4;
-  /* align-self: end; */
+  align-self: start;
   justify-self: end;
   margin-bottom: -2rem;
   /* padding-bottom: 1rem; */
@@ -35,9 +35,9 @@
 .previous-input {
   color: #758592;
   grid-column: 1/5;
-  /* align-self: start;
-  justify-self: start; */
-  min-width: 68px;
+  grid-row: 1/2;
+  align-self: end;
+  justify-self: end;
 }
 .btn {
   display: flex;

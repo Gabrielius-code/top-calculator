@@ -5,9 +5,11 @@ class Calculator {
   #secondNum = "";
   #answer = "";
   #input = document.querySelector(".input");
+  #inputStr = "";
   #previuosInput = document.querySelector(".previous-input");
   #operator = "";
   #equalBtn = document.querySelector(".equal");
+  #clearAll = document.querySelector(".clearAll");
   constructor() {
     this.#addEventListenersToBtns();
   }
@@ -19,6 +21,7 @@ class Calculator {
       operator.addEventListener("click", this.#handleOperatorClick.bind(this))
     );
     this.#equalBtn.addEventListener("click", this.#handleEqualClick.bind(this));
+    this.#clearAll.addEventListener("click", this.#init.bind(this));
   }
   #handleNumClick(e) {
     //FOR NOW
@@ -34,18 +37,22 @@ class Calculator {
     console.log(`Pirmas:${this.#firstNum} Antras:${this.#secondNum}`);
   }
   #handleOperatorClick(e) {
-    if (this.#operator)
-      this.#operate(this.#operator, this.#firstNum, this.#secondNum);
+    if (this.#operator && this.#secondNum)
+      return this.#operate(this.#operator, this.#firstNum, this.#secondNum);
+
     this.#operator = e.target.dataset.operator;
-    this.#displayInput(this.#operator);
+    // this.#input.textContent.splice(-1, 1);
+    this.#displayInput(` ${this.#operator} `);
   }
   #handleEqualClick() {
+    if (!this.#secondNum) return;
     this.#operate(this.#operator, this.#firstNum, this.#secondNum);
   }
   #init() {
     this.#firstNum = "";
     this.#secondNum = "";
     this.#input.textContent = "";
+    this.#inputStr = "";
     this.#previuosInput.textContent = "";
     this.#answer = "";
     this.#operator = "";
@@ -79,16 +86,19 @@ class Calculator {
         this.#answer = this.#divide(num1, num2);
         break;
     }
+    this.#previuosInput.textContent = `${num1} ${operator} ${num2} =`;
     this.#displayAnswer(this.#answer);
     this.#firstNum = this.#answer;
     this.#secondNum = "";
     this.#operator = "";
   }
   #displayInput(input) {
-    this.#input.textContent += input;
+    this.#inputStr += input;
+    this.#input.textContent = this.#inputStr;
   }
   #displayAnswer(answer) {
     this.#input.textContent = answer;
+    this.#inputStr = answer;
   }
 }
 const calculator = new Calculator();
