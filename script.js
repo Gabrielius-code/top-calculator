@@ -6,7 +6,8 @@ class Calculator {
   #answer = "";
   #input = document.querySelector(".input");
   #inputStr = "";
-  #previuosInput = document.querySelector(".previous-input");
+  #temporaryInputStr = "";
+  #previousInput = document.querySelector(".previous-input");
   #operator = "";
   #equalBtn = document.querySelector(".equal");
   #clearAll = document.querySelector(".clearAll");
@@ -38,11 +39,16 @@ class Calculator {
   }
   #handleOperatorClick(e) {
     if (this.#operator && this.#secondNum)
-      return this.#operate(this.#operator, this.#firstNum, this.#secondNum);
+      this.#operate(this.#operator, this.#firstNum, this.#secondNum);
 
+    if (this.#operator) {
+      this.#temporaryInputStr = [...this.#inputStr];
+      this.#temporaryInputStr.splice(-1, 1);
+      this.#inputStr = this.#temporaryInputStr.join("");
+    }
     this.#operator = e.target.dataset.operator;
-    // this.#input.textContent.splice(-1, 1);
-    this.#displayInput(` ${this.#operator} `);
+
+    this.#displayInput(`${this.#operator}`);
   }
   #handleEqualClick() {
     if (!this.#secondNum) return;
@@ -53,7 +59,7 @@ class Calculator {
     this.#secondNum = "";
     this.#input.textContent = "";
     this.#inputStr = "";
-    this.#previuosInput.textContent = "";
+    this.#previousInput.textContent = "";
     this.#answer = "";
     this.#operator = "";
   }
@@ -72,21 +78,23 @@ class Calculator {
   #operate(operator, num1, num2) {
     num1 = Number(num1);
     num2 = Number(num2);
-    switch (operator) {
-      case "+":
-        this.#answer = this.#add(num1, num2);
-        break;
-      case "-":
-        this.#answer = this.#subtract(num1, num2);
-        break;
-      case "*":
-        this.#answer = this.#multiply(num1, num2);
-        break;
-      case "/":
-        this.#answer = this.#divide(num1, num2);
-        break;
-    }
-    this.#previuosInput.textContent = `${num1} ${operator} ${num2} =`;
+    //PRADĖTI NUO ČIA
+    if ((this.#firstNum == 0 || this.#secondNum == 0) && this.#operator === "/")
+      switch (operator) {
+        case "+":
+          this.#answer = this.#add(num1, num2);
+          break;
+        case "-":
+          this.#answer = this.#subtract(num1, num2);
+          break;
+        case "*":
+          this.#answer = this.#multiply(num1, num2);
+          break;
+        case "/":
+          this.#answer = this.#divide(num1, num2);
+          break;
+      }
+    this.#previousInput.textContent = `${num1} ${operator} ${num2} =`;
     this.#displayAnswer(this.#answer);
     this.#firstNum = this.#answer;
     this.#secondNum = "";
@@ -94,6 +102,7 @@ class Calculator {
   }
   #displayInput(input) {
     this.#inputStr += input;
+
     this.#input.textContent = this.#inputStr;
   }
   #displayAnswer(answer) {
