@@ -8,7 +8,7 @@ class Calculator {
   #temporaryInputStr = "";
   #operator = "";
   #removedCharacter = "";
-  #currentNumber = this.#firstNum; //By default
+  #currentNumberIsFirst = true; //By default
   #input = document.querySelector(".input");
   #previousInput = document.querySelector(".previous-input");
   #equalBtn = document.querySelector(".equal");
@@ -43,9 +43,13 @@ class Calculator {
       if (this.#answer || this.#answer === 0) {
         this.#init();
       } //If I have an answer like 100 and I press number (for example 1), then it should clear firstNum, because it shouldn't be 1001, it should be 1
+      this.#currentNumberIsFirst = true;
       this.#firstNum += e.target.dataset.number;
     }
-    if (this.#operator) this.#secondNum += e.target.dataset.number;
+    if (this.#operator) {
+      this.#currentNumberIsFirst = false;
+      this.#secondNum += e.target.dataset.number;
+    }
     this.#displayInput(e.target.dataset.number);
     console.log(`Pirmas:${this.#firstNum} Antras:${this.#secondNum}`);
   }
@@ -58,6 +62,7 @@ class Calculator {
     if (this.#operator) {
       this.#removeOneFromInputStr();
     }
+    this.#currentNumberIsFirst = false;
     this.#operator = e.target.dataset.operator;
 
     this.#displayInput(`${this.#operator}`);
@@ -69,15 +74,35 @@ class Calculator {
   #handleDeleteOneClick() {
     this.#removeOneFromInputStr();
     this.#displayInput();
-    if (this.#removedCharacter == this.#secondNum.at(-1))
+    if (this.#removedCharacter == this.#secondNum.at(-1)) {
       this.#secondNum = this.#secondNum.slice(0, -1);
-    else if (this.#removedCharacter == this.#operator.at(-1))
+      // if (!this.#secondNum&&this.operator) this.#currentNumberIsFirst = true;
+    } else if (this.#removedCharacter == this.#operator.at(-1)) {
       this.#operator = this.#operator.slice(0, -1);
-    else if (this.#removedCharacter == this.#firstNum.at(-1))
+      if (!this.#operator) this.#currentNumberIsFirst = true;
+    } else if (this.#removedCharacter == this.#firstNum.at(-1))
       this.#firstNum = this.#firstNum.slice(0, -1);
     else return;
   }
   #handleDecimalClick() {
+    if (this.#currentNumberIsFirst) {
+      if (!this.#firstNum) {
+        this.#firstNum = "0.";
+        this.#displayInput("0.");
+      } else if (!this.#firstNum.includes(".")) {
+        this.#firstNum += ".";
+        this.#displayInput(".");
+      }
+    }
+    if (!this.#currentNumberIsFirst) {
+      if (!this.#secondNum) {
+        this.#secondNum = "0.";
+        this.#displayInput("0.");
+      } else if (!this.#secondNum.includes(".")) {
+        this.#secondNum += ".";
+        this.#displayInput(".");
+      }
+    }
     // if (!this.#firstNum) {
     //   this.#firstNum = "0.";
     //   this.#displayInput("0.");
@@ -159,25 +184,19 @@ class Calculator {
         this.#answer = this.#divide(num1, num2);
         break;
     }
+    this.#answer = +this.#answer.toFixed(10);
     this.#answer = this.#answer.toString();
     this.#previousInput.textContent = `${num1} ${operator} ${num2} =`;
     this.#inputStr = "";
     this.#displayInput(this.#answer);
     this.#firstNum = this.#answer;
+    this.#currentNumberIsFirst = true;
     this.#secondNum = "";
     this.#operator = "";
   }
   #displayInput(input = "") {
     this.#inputStr += input;
-
     this.#input.textContent = this.#inputStr;
   }
-  // #displayAnswer(answer) {
-  //   // this.#input.textContent = answer;
-
-  //   this.#inputStr = "";
-  //   this.#displayInput(answer);
-  // }
 }
 const calculator = new Calculator();
-//ROUND NUMBERS
