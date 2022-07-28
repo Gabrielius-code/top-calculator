@@ -4,13 +4,17 @@ class Calculator {
   #firstNum = "";
   #secondNum = "";
   #answer = "";
-  #input = document.querySelector(".input");
   #inputStr = "";
   #temporaryInputStr = "";
-  #previousInput = document.querySelector(".previous-input");
   #operator = "";
+  #removedCharacter = "";
+  #currentNumber = this.#firstNum; //By default
+  #input = document.querySelector(".input");
+  #previousInput = document.querySelector(".previous-input");
   #equalBtn = document.querySelector(".equal");
   #clearAll = document.querySelector(".clearAll");
+  #deleteOne = document.querySelector(".deleteOne");
+  #decimal = document.querySelector(".decimal");
   constructor() {
     this.#addEventListenersToBtns();
   }
@@ -23,6 +27,14 @@ class Calculator {
     );
     this.#equalBtn.addEventListener("click", this.#handleEqualClick.bind(this));
     this.#clearAll.addEventListener("click", this.#init.bind(this));
+    this.#deleteOne.addEventListener(
+      "click",
+      this.#handleDeleteOneClick.bind(this)
+    );
+    this.#decimal.addEventListener(
+      "click",
+      this.#handleDecimalClick.bind(this)
+    );
   }
   #handleNumClick(e) {
     //FOR NOW
@@ -38,13 +50,13 @@ class Calculator {
     console.log(`Pirmas:${this.#firstNum} Antras:${this.#secondNum}`);
   }
   #handleOperatorClick(e) {
+    if (!this.#firstNum) return;
+
     if (this.#operator && this.#secondNum)
       this.#operate(this.#operator, this.#firstNum, this.#secondNum);
 
     if (this.#operator) {
-      this.#temporaryInputStr = [...this.#inputStr];
-      this.#temporaryInputStr.splice(-1, 1);
-      this.#inputStr = this.#temporaryInputStr.join("");
+      this.#removeOneFromInputStr();
     }
     this.#operator = e.target.dataset.operator;
 
@@ -54,6 +66,35 @@ class Calculator {
     if (!this.#secondNum) return;
     this.#operate(this.#operator, this.#firstNum, this.#secondNum);
   }
+  #handleDeleteOneClick() {
+    this.#removeOneFromInputStr();
+    this.#displayInput();
+    if (this.#removedCharacter == this.#secondNum.at(-1))
+      this.#secondNum = this.#secondNum.slice(0, -1);
+    else if (this.#removedCharacter == this.#operator.at(-1))
+      this.#operator = this.#operator.slice(0, -1);
+    else if (this.#removedCharacter == this.#firstNum.at(-1))
+      this.#firstNum = this.#firstNum.slice(0, -1);
+    else return;
+  }
+  #handleDecimalClick() {
+    // if (!this.#firstNum) {
+    //   this.#firstNum = "0.";
+    //   this.#displayInput("0.");
+    // }
+    // else if (!this.#secondNum) {
+    //   this.#secondNum = "0.";
+    //   this.#displayInput("0.");
+    // }
+    // if (!this.#firstNum.includes(".")) {
+    //   this.#firstNum += ".";
+    //   this.#displayInput(".");
+    // }
+    // if (!this.#secondNum.includes(".")) {
+    //   this.#secondNum += ".";
+    //   this.#displayInput(".");
+    // }
+  }
   #init() {
     this.#firstNum = "";
     this.#secondNum = "";
@@ -62,6 +103,18 @@ class Calculator {
     this.#previousInput.textContent = "";
     this.#answer = "";
     this.#operator = "";
+  }
+  #removeOneFromInputStr() {
+    // console.log(this.#inputStr, "paprastas");
+    // console.log(Array(this.#inputStr), "Array");
+    // console.log([...this.#inputStr], "irgi array");
+    this.#temporaryInputStr = [...this.#inputStr];
+    this.#removedCharacter = this.#temporaryInputStr.splice(-1, 1);
+    this.#inputStr = this.#temporaryInputStr.join("");
+    /*
+    this.#inputStr = this.#inputStr.slice(0, -1);
+    BETTER SOLUTION BUT I NEED TO KNOW REMOVED CHARACTER
+*/
   }
   #add(a, b) {
     return a + b;
@@ -79,35 +132,52 @@ class Calculator {
     num1 = Number(num1);
     num2 = Number(num2);
     //PRADĖTI NUO ČIA
-    if ((this.#firstNum == 0 || this.#secondNum == 0) && this.#operator === "/")
-      switch (operator) {
-        case "+":
-          this.#answer = this.#add(num1, num2);
-          break;
-        case "-":
-          this.#answer = this.#subtract(num1, num2);
-          break;
-        case "*":
-          this.#answer = this.#multiply(num1, num2);
-          break;
-        case "/":
-          this.#answer = this.#divide(num1, num2);
-          break;
-      }
+    if (
+      (this.#firstNum == 0 || this.#secondNum == 0) &&
+      this.#operator === "÷"
+    ) {
+      // this.#input.textContent = "";
+      // this.#inputStr = "";
+      // this.#firstNum = "";
+      // this.#secondNum = "";
+      // this.#operator = "";
+      this.#init();
+      this.#previousInput.textContent = "Can't divide by zero!";
+      return;
+    }
+    switch (operator) {
+      case "+":
+        this.#answer = this.#add(num1, num2);
+        break;
+      case "-":
+        this.#answer = this.#subtract(num1, num2);
+        break;
+      case "×":
+        this.#answer = this.#multiply(num1, num2);
+        break;
+      case "÷":
+        this.#answer = this.#divide(num1, num2);
+        break;
+    }
+    this.#answer = this.#answer.toString();
     this.#previousInput.textContent = `${num1} ${operator} ${num2} =`;
-    this.#displayAnswer(this.#answer);
+    this.#inputStr = "";
+    this.#displayInput(this.#answer);
     this.#firstNum = this.#answer;
     this.#secondNum = "";
     this.#operator = "";
   }
-  #displayInput(input) {
+  #displayInput(input = "") {
     this.#inputStr += input;
 
     this.#input.textContent = this.#inputStr;
   }
-  #displayAnswer(answer) {
-    this.#input.textContent = answer;
-    this.#inputStr = answer;
-  }
+  // #displayAnswer(answer) {
+  //   // this.#input.textContent = answer;
+
+  //   this.#inputStr = "";
+  //   this.#displayInput(answer);
+  // }
 }
 const calculator = new Calculator();
+//ROUND NUMBERS
