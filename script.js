@@ -44,12 +44,10 @@ class Calculator {
     window.addEventListener("keydown", this.#handleKeyPresses.bind(this));
   }
   #handleNumClick(e) {
-    //FOR NOW
-
     if (!this.#operator) {
       if (this.#answer || this.#answer === 0) {
         this.#init();
-      } //If I have an answer like 100 and I press number (for example 1), then it should clear firstNum, because it shouldn't be 1001, it should be 1
+      }
       this.#currentNumberIsFirst = true;
       this.#firstNum += e.target.dataset.number || e.key;
     }
@@ -82,7 +80,6 @@ class Calculator {
     this.#displayInput();
     if (this.#removedCharacter == this.#secondNum.at(-1)) {
       this.#secondNum = this.#secondNum.slice(0, -1);
-      // if (!this.#secondNum&&this.operator) this.#currentNumberIsFirst = true;
     } else if (this.#removedCharacter == this.#operator.at(-1)) {
       this.#operator = this.#operator.slice(0, -1);
       if (!this.#operator) this.#currentNumberIsFirst = true;
@@ -109,28 +106,7 @@ class Calculator {
         this.#displayInput(".");
       }
     }
-    // if (!this.#firstNum) {
-    //   this.#firstNum = "0.";
-    //   this.#displayInput("0.");
-    // }
-    // else if (!this.#secondNum) {
-    //   this.#secondNum = "0.";
-    //   this.#displayInput("0.");
-    // }
-    // if (!this.#firstNum.includes(".")) {
-    //   this.#firstNum += ".";
-    //   this.#displayInput(".");
-    // }
-    // if (!this.#secondNum.includes(".")) {
-    //   this.#secondNum += ".";
-    //   this.#displayInput(".");
-    // }
   }
-  /*Don't know if it the best solution to do this!
-  VERY COMPLICATED! But working!
-  I know that I'm repeating same thing, but with different number. I tried to make different function for it, but it didn't work!
-  And maybe all the idea is bad, with temporaryNumber...
-  */
   #handlePlusMinusClick() {
     if (this.#currentNumberIsFirst) {
       if (!this.#firstNum.includes("-")) {
@@ -212,16 +188,9 @@ class Calculator {
     this.#operator = "";
   }
   #removeOneFromInputStr() {
-    // console.log(this.#inputStr, "paprastas");
-    // console.log(Array(this.#inputStr), "Array");
-    // console.log([...this.#inputStr], "irgi array");
     this.#temporaryInputStr = [...this.#inputStr];
     this.#removedCharacter = this.#temporaryInputStr.splice(-1, 1);
     this.#inputStr = this.#temporaryInputStr.join("");
-    /*
-    this.#inputStr = this.#inputStr.slice(0, -1);
-    BETTER SOLUTION BUT I NEED TO KNOW REMOVED CHARACTER
-*/
   }
   #add(a, b) {
     return a + b;
@@ -238,16 +207,10 @@ class Calculator {
   #operate(operator, num1, num2) {
     num1 = Number(num1);
     num2 = Number(num2);
-    //PRADĖTI NUO ČIA
     if (
       (this.#firstNum == 0 || this.#secondNum == 0) &&
       this.#operator === "÷"
     ) {
-      // this.#input.textContent = "";
-      // this.#inputStr = "";
-      // this.#firstNum = "";
-      // this.#secondNum = "";
-      // this.#operator = "";
       this.#init();
       this.#previousInput.textContent = "Can't divide by zero!";
       return;
