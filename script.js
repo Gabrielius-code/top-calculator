@@ -41,6 +41,7 @@ class Calculator {
       "click",
       this.#handlePlusMinusClick.bind(this)
     );
+    window.addEventListener("keydown", this.#handleKeyPresses.bind(this));
   }
   #handleNumClick(e) {
     //FOR NOW
@@ -50,14 +51,13 @@ class Calculator {
         this.#init();
       } //If I have an answer like 100 and I press number (for example 1), then it should clear firstNum, because it shouldn't be 1001, it should be 1
       this.#currentNumberIsFirst = true;
-      this.#firstNum += e.target.dataset.number;
+      this.#firstNum += e.target.dataset.number || e.key;
     }
     if (this.#operator) {
       this.#currentNumberIsFirst = false;
-      this.#secondNum += e.target.dataset.number;
+      this.#secondNum += e.target.dataset.number || e.key;
     }
-    this.#displayInput(e.target.dataset.number);
-    console.log(`Pirmas:${this.#firstNum} Antras:${this.#secondNum}`);
+    this.#displayInput(e.target.dataset.number || e.key);
   }
   #handleOperatorClick(e) {
     if (!this.#firstNum) return;
@@ -69,8 +69,8 @@ class Calculator {
       this.#removeOneFromInputStr();
     }
     this.#currentNumberIsFirst = false;
-    this.#operator = e.target.dataset.operator;
-
+    this.#operator = e.target.dataset.operator || e.key;
+    this.#changeOperatorLook(this.#operator);
     this.#displayInput(`${this.#operator}`);
   }
   #handleEqualClick() {
@@ -159,6 +159,7 @@ class Calculator {
       }
     }
   }
+
   #renderMinusInInputStr(firstNum = true) {
     this.#temporaryInputStr = [...this.#inputStr];
     if (firstNum) this.#temporaryInputStr.unshift("-");
@@ -175,6 +176,31 @@ class Calculator {
       this.#temporaryInputStr.splice(-this.#secondNum.length - 1, 1);
     this.#inputStr = this.#temporaryInputStr.join("");
     this.#displayInput();
+  }
+  #handleKeyPresses(e) {
+    if (e.key === "Backspace" || e.key === "Delete")
+      this.#handleDeleteOneClick();
+    else if (e.key === "+" || e.key === "-" || e.key === "/" || e.key === "*")
+      this.#handleOperatorClick(e);
+    else if (isFinite(e.key)) this.#handleNumClick(e);
+    else if (e.key === "Enter" || e.key === "=") this.#handleEqualClick();
+    else if (e.key === ".") this.#handleDecimalClick();
+  }
+  #changeOperatorLook(operator) {
+    switch (operator) {
+      case "+":
+        this.#operator = "+";
+        break;
+      case "-":
+        this.#operator = "-";
+        break;
+      case "*":
+        this.#operator = "×";
+        break;
+      case "/":
+        this.#operator = "÷";
+        break;
+    }
   }
   #init() {
     this.#firstNum = "";
@@ -256,3 +282,4 @@ class Calculator {
   }
 }
 const calculator = new Calculator();
+addEventListener("keydown", (e) => console.log(e.key));
