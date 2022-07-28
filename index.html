@@ -13,27 +13,37 @@
       <div class="calculator">
         <div class="previous-input"></div>
         <div class="input"></div>
-        <button class="btn special clearAll">AC</button>
-        <button class="btn special deleteOne">
+        <button class="btn special clearAll" onclick="this.blur()">AC</button>
+        <button class="btn special deleteOne" onclick="this.blur()">
           <img src="delete.svg" alt="erase button" class="erase" />
         </button>
-        <button class="btn special plusMinus">&plusmn;</button>
-        <button class="btn special" data-operator="/">&#247;</button>
-        <button class="btn" data-number="7">7</button>
-        <button class="btn" data-number="8">8</button>
-        <button class="btn" data-number="9">9</button>
-        <button class="btn special" data-operator="*">&times;</button>
-        <button class="btn" data-number="4">4</button>
-        <button class="btn" data-number="5">5</button>
-        <button class="btn" data-number="6">6</button>
-        <button class="btn special" data-operator="-">&minus;</button>
-        <button class="btn" data-number="1">1</button>
-        <button class="btn" data-number="2">2</button>
-        <button class="btn" data-number="3">3</button>
-        <button class="btn special" data-operator="+">&plus;</button>
-        <button class="btn" data-number="0">0</button>
-        <button class="btn decimal">.</button>
-        <button class="btn equal">&#x3D;</button>
+        <button class="btn special plusMinus" onclick="this.blur()">
+          &plusmn;
+        </button>
+        <button class="btn special" onclick="this.blur()" data-operator="/">
+          &#247;
+        </button>
+        <button class="btn" onclick="this.blur()" data-number="7">7</button>
+        <button class="btn" onclick="this.blur()" data-number="8">8</button>
+        <button class="btn" onclick="this.blur()" data-number="9">9</button>
+        <button class="btn special" onclick="this.blur()" data-operator="*">
+          &times;
+        </button>
+        <button class="btn" onclick="this.blur()" data-number="4">4</button>
+        <button class="btn" onclick="this.blur()" data-number="5">5</button>
+        <button class="btn" onclick="this.blur()" data-number="6">6</button>
+        <button class="btn special" onclick="this.blur()" data-operator="-">
+          &minus;
+        </button>
+        <button class="btn" onclick="this.blur()" data-number="1">1</button>
+        <button class="btn" onclick="this.blur()" data-number="2">2</button>
+        <button class="btn" onclick="this.blur()" data-number="3">3</button>
+        <button class="btn special" onclick="this.blur()" data-operator="+">
+          &plus;
+        </button>
+        <button class="btn" onclick="this.blur()" data-number="0">0</button>
+        <button class="btn decimal" onclick="this.blur()">.</button>
+        <button class="btn equal" onclick="this.blur()">&#x3D;</button>
       </div>
     </div>
   </body>

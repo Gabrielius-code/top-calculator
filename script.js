@@ -121,7 +121,7 @@ class Calculator {
         this.#removeMinusInInputStr();
       }
     }
-    if (!this.#currentNumberIsFirst) {
+    if (!this.#currentNumberIsFirst && this.#secondNum) {
       if (!this.#secondNum.includes("-")) {
         this.#temporaryNumber = [...this.#secondNum];
         this.#temporaryNumber.unshift("-");
