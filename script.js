@@ -6,6 +6,7 @@ class Calculator {
   #answer = "";
   #inputStr = "";
   #temporaryInputStr = "";
+  #temporaryNumber = "";
   #operator = "";
   #removedCharacter = "";
   #currentNumberIsFirst = true; //By default
@@ -15,6 +16,7 @@ class Calculator {
   #clearAll = document.querySelector(".clearAll");
   #deleteOne = document.querySelector(".deleteOne");
   #decimal = document.querySelector(".decimal");
+  #plusMinus = document.querySelector(".plusMinus");
   constructor() {
     this.#addEventListenersToBtns();
   }
@@ -34,6 +36,10 @@ class Calculator {
     this.#decimal.addEventListener(
       "click",
       this.#handleDecimalClick.bind(this)
+    );
+    this.#plusMinus.addEventListener(
+      "click",
+      this.#handlePlusMinusClick.bind(this)
     );
   }
   #handleNumClick(e) {
@@ -119,6 +125,56 @@ class Calculator {
     //   this.#secondNum += ".";
     //   this.#displayInput(".");
     // }
+  }
+  /*Don't know if it the best solution to do this!
+  VERY COMPLICATED! But working!
+  I know that I'm repeating same thing, but with different number. I tried to make different function for it, but it didn't work!
+  And maybe all the idea is bad, with temporaryNumber...
+  */
+  #handlePlusMinusClick() {
+    if (this.#currentNumberIsFirst) {
+      if (!this.#firstNum.includes("-")) {
+        this.#temporaryNumber = [...this.#firstNum];
+        this.#temporaryNumber.unshift("-");
+        this.#firstNum = this.#temporaryNumber.join("");
+        this.#renderMinusInInputStr();
+      } else if (this.#firstNum.includes("-")) {
+        this.#temporaryNumber = [...this.#firstNum];
+        this.#temporaryNumber.shift();
+        this.#firstNum = this.#temporaryNumber.join("");
+        this.#removeMinusInInputStr();
+      }
+    }
+    if (!this.#currentNumberIsFirst) {
+      if (!this.#secondNum.includes("-")) {
+        this.#temporaryNumber = [...this.#secondNum];
+        this.#temporaryNumber.unshift("-");
+        this.#secondNum = this.#temporaryNumber.join("");
+        this.#renderMinusInInputStr(false);
+      } else if (this.#secondNum.includes("-")) {
+        this.#temporaryNumber = [...this.#secondNum];
+        this.#temporaryNumber.shift();
+        this.#secondNum = this.#temporaryNumber.join("");
+        this.#removeMinusInInputStr(false);
+      }
+    }
+  }
+  #renderMinusInInputStr(firstNum = true) {
+    this.#temporaryInputStr = [...this.#inputStr];
+    if (firstNum) this.#temporaryInputStr.unshift("-");
+    if (!firstNum)
+      this.#temporaryInputStr.splice(-this.#secondNum.length + 1, 0, "-");
+
+    this.#inputStr = this.#temporaryInputStr.join("");
+    this.#displayInput();
+  }
+  #removeMinusInInputStr(firstNum = true) {
+    this.#temporaryInputStr = [...this.#inputStr];
+    if (firstNum) this.#temporaryInputStr.shift();
+    if (!firstNum)
+      this.#temporaryInputStr.splice(-this.#secondNum.length - 1, 1);
+    this.#inputStr = this.#temporaryInputStr.join("");
+    this.#displayInput();
   }
   #init() {
     this.#firstNum = "";
